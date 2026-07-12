@@ -24,6 +24,7 @@ Phát triển bởi BSD — https://bsdinsight.com
     'author': 'BSD',
     'website': 'https://bsdinsight.com',
     'license': 'LGPL-3',
+    'images': ['static/description/cover.png'],
     'depends': ['base'],
     'data': [
         'security/ir.model.access.csv',
