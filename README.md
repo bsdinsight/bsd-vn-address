@@ -1,26 +1,51 @@
-# bsd_vn_address — Địa giới hành chính VN (2025), dùng chung BSD
+# BSD – Đơn vị hành chính Việt Nam 2025 (`bsd_vn_address`)
 
-Module Odoo 19 Community **nền dùng chung** cho mọi sản phẩm BSD (Sapiones, Agrione,
-Realty Pro, Parkone…). Cung cấp:
+Module nền **dùng chung** cho địa giới hành chính Việt Nam sau cải cách **2025**
+(34 tỉnh/thành, 2 cấp Tỉnh → Phường/Xã, bỏ cấp huyện) trên **Odoo 19.0**.
 
-- Model **`frm.vn.ward`** — Phường/Xã (cải cách 2025: 34 tỉnh, 2 cấp, bỏ huyện).
-  Core: `name`, `code`, `state_id` (→ `res.country.state`, domain VN), `active`.
-- Nạp sẵn **~3321 phường/xã** khi cài (post_init, khớp 34 tỉnh của Odoo base, NFC + mã).
-- Trường **`res.partner.vn_ward_id`** (địa chỉ cấp xã) — sản phẩm KHÔNG khai lại.
+[![License: LGPL-3](https://img.shields.io/badge/license-LGPL--3-blue.svg)](LICENSE)
+![Odoo 19.0](https://img.shields.io/badge/Odoo-19.0-714B67.svg)
 
-## Vì sao tên model là `frm.vn.ward`
-Giữ theo Agrione — nơi model này đã cắm sâu ~15 model nghiệp vụ. Để làm nền dùng chung
-mà không phải refactor Agrione, ta tách phần CORE ra đây; Agrione `frm_vn_address`
-chỉ cần `depends: ['bsd_vn_address']` rồi `_inherit = 'frm.vn.ward'` thêm field nông học.
+## Tính năng
 
-## Sản phẩm khác dùng thế nào
+- **`frm.vn.ward`** — danh mục Phường/Xã gắn với `res.country.state` (34 tỉnh sẵn có của Odoo), có tên + mã.
+- **Tự nạp ~3.321 phường/xã** khi cài (`post_init_hook`), khớp tỉnh theo tên đã chuẩn hoá (NFC, bỏ tiền tố *Tỉnh/Thành phố*, xử lý bí danh *Huế ↔ Thừa Thiên - Huế*).
+- **Idempotent** theo `(state_id, name)` — cài lại/nâng cấp không tạo trùng; **không** sửa `res.country.state`.
+- **`res.partner.vn_ward_id`** — chọn Phường/Xã ngay trên form liên hệ.
+
+## Cài đặt
+
+```bash
+# đặt thư mục module vào addons_path, rồi:
+odoo -i bsd_vn_address -d <database>
+```
+
+Không cần module ngoài — **chỉ phụ thuộc `base`**.
+
+## Dùng làm lớp nền cho module khác
+
 ```python
 # __manifest__.py
 'depends': ['bsd_vn_address'],
-# model
-ward_id = fields.Many2one('frm.vn.ward', ...)
-```
-Sapiones: `l10n_vn_hr` trỏ `private_vn_ward_id → frm.vn.ward`; `l10n_vn_address` tan vào module này.
 
-## Cài
-`-i bsd_vn_address` (post_init tự nạp 3321 xã). Idempotent.
+# models
+ward_id = fields.Many2one('frm.vn.ward', string='Phường/Xã')
+```
+
+## Kỹ thuật
+
+| | |
+|---|---|
+| Phiên bản Odoo | 19.0 (Community & Enterprise) |
+| Phụ thuộc | `base` |
+| Giấy phép | LGPL-3 |
+| Model chính | `frm.vn.ward`, mở rộng `res.partner` |
+| Dữ liệu | ~3.321 phường/xã (cập nhật 2025) |
+
+## Giấy phép
+
+LGPL-3 — xem [LICENSE](LICENSE).
+
+---
+
+Phát triển bởi **BSD** · [bsdinsight.com](https://bsdinsight.com)

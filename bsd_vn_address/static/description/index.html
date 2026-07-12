@@ -1,0 +1,84 @@
+<section style="font-family:'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#1f2d27;max-width:980px;margin:0 auto;line-height:1.6">
+
+  <!-- ===== HERO ===== -->
+  <div style="background:linear-gradient(135deg,#2e9e5b 0%,#146b3a 100%);border-radius:20px;padding:48px 40px;color:#fff;text-align:center">
+    <h1 style="margin:0 0 10px;font-size:34px;font-weight:800;color:#fff">Đơn vị hành chính Việt Nam 2025</h1>
+    <p style="margin:0 auto;max-width:680px;font-size:18px;opacity:.95">
+      Model nền <b>dùng chung</b> cho địa giới hành chính Việt Nam sau cải cách 2025 —
+      34 tỉnh/thành, 2 cấp, bỏ cấp huyện. Tự nạp <b>~3.321 phường/xã</b> khi cài đặt.
+    </p>
+    <div style="margin-top:22px">
+      <span style="display:inline-block;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.35);border-radius:999px;padding:7px 16px;margin:4px;font-size:14px">✔ Miễn phí &amp; mã nguồn mở (LGPL-3)</span>
+      <span style="display:inline-block;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.35);border-radius:999px;padding:7px 16px;margin:4px;font-size:14px">✔ Chỉ phụ thuộc <code style="color:#fff">base</code></span>
+      <span style="display:inline-block;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.35);border-radius:999px;padding:7px 16px;margin:4px;font-size:14px">✔ Nạp dữ liệu tự động</span>
+    </div>
+  </div>
+
+  <!-- ===== WHY ===== -->
+  <div style="margin:40px 0 8px">
+    <h2 style="font-size:24px;font-weight:800;color:#146b3a;margin:0 0 8px">Vì sao cần module này?</h2>
+    <p style="font-size:16px;margin:0">
+      Từ <b>2025</b>, Việt Nam tổ chức lại đơn vị hành chính: gộp còn <b>34 tỉnh/thành</b>,
+      bỏ cấp quận/huyện, chỉ còn <b>2 cấp</b> Tỉnh → Phường/Xã. Mọi hệ thống Odoo dùng
+      địa chỉ Việt Nam đều cần một nguồn phường/xã <b>chuẩn, thống nhất</b>. Module này cung
+      cấp đúng lớp nền đó và có thể tái sử dụng cho mọi sản phẩm.
+    </p>
+  </div>
+
+  <!-- ===== FEATURES ===== -->
+  <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:18px;margin:24px 0">
+    <div style="border:1px solid #e2ece6;border-radius:14px;padding:22px">
+      <div style="font-size:26px">🗂️</div>
+      <h3 style="margin:8px 0 6px;font-size:18px;color:#146b3a">Model <code>frm.vn.ward</code></h3>
+      <p style="margin:0;font-size:15px">Danh mục Phường/Xã gắn với <code>res.country.state</code> (34 tỉnh có sẵn của Odoo). Có tên và mã, sẵn sàng làm Many2one ở bất kỳ model nào.</p>
+    </div>
+    <div style="border:1px solid #e2ece6;border-radius:14px;padding:22px">
+      <div style="font-size:26px">⚡</div>
+      <h3 style="margin:8px 0 6px;font-size:18px;color:#146b3a">Tự nạp ~3.321 xã</h3>
+      <p style="margin:0;font-size:15px">Cài xong là có dữ liệu ngay. Hook nạp <b>idempotent</b> theo (tỉnh, tên xã) — cài lại hay nâng cấp không tạo trùng.</p>
+    </div>
+    <div style="border:1px solid #e2ece6;border-radius:14px;padding:22px">
+      <div style="font-size:26px">📇</div>
+      <h3 style="margin:8px 0 6px;font-size:18px;color:#146b3a">Địa chỉ cấp xã cho liên hệ</h3>
+      <p style="margin:0;font-size:15px">Thêm trường <code>vn_ward_id</code> vào <code>res.partner</code> để chọn Phường/Xã trực tiếp trên form liên hệ.</p>
+    </div>
+    <div style="border:1px solid #e2ece6;border-radius:14px;padding:22px">
+      <div style="font-size:26px">🧩</div>
+      <h3 style="margin:8px 0 6px;font-size:18px;color:#146b3a">Lớp nền dùng chung</h3>
+      <p style="margin:0;font-size:15px">Các module khác chỉ cần <code>depends: ['bsd_vn_address']</code> rồi trỏ Many2one tới <code>frm.vn.ward</code> — không khai lại danh mục.</p>
+    </div>
+  </div>
+
+  <!-- ===== HOW IT WORKS ===== -->
+  <div style="background:#f4faf6;border-radius:16px;padding:28px 32px;margin:28px 0">
+    <h2 style="font-size:22px;font-weight:800;color:#146b3a;margin:0 0 14px">Hoạt động ra sao</h2>
+    <ol style="margin:0;padding-left:20px;font-size:16px">
+      <li style="margin-bottom:8px">Cài module → hook <code>post_init_hook</code> đọc <code>data/wards.json</code>.</li>
+      <li style="margin-bottom:8px">Khớp mỗi xã vào tỉnh theo tên đã <b>chuẩn hoá</b> (NFC, bỏ tiền tố “Tỉnh/Thành phố”, xử lý bí danh Huế ↔ Thừa Thiên - Huế).</li>
+      <li style="margin-bottom:8px">Tạo bản ghi <code>frm.vn.ward</code>; ghi log số xã đã tạo và các tỉnh chưa khớp (nếu có).</li>
+      <li>Chỉ ghi vào bảng riêng — <b>không</b> sửa <code>res.country.state</code>, an toàn với dữ liệu sẵn có.</li>
+    </ol>
+  </div>
+
+  <!-- ===== TECH ===== -->
+  <div style="margin:28px 0">
+    <h2 style="font-size:22px;font-weight:800;color:#146b3a;margin:0 0 12px">Thông tin kỹ thuật</h2>
+    <table style="width:100%;border-collapse:collapse;font-size:15px">
+      <tr style="border-bottom:1px solid #e2ece6"><td style="padding:10px 8px;width:220px;color:#5a6b62">Phiên bản Odoo</td><td style="padding:10px 8px"><b>19.0</b> (Community &amp; Enterprise)</td></tr>
+      <tr style="border-bottom:1px solid #e2ece6"><td style="padding:10px 8px;color:#5a6b62">Phụ thuộc</td><td style="padding:10px 8px"><code>base</code> — không cần module bên ngoài</td></tr>
+      <tr style="border-bottom:1px solid #e2ece6"><td style="padding:10px 8px;color:#5a6b62">Giấy phép</td><td style="padding:10px 8px"><b>LGPL-3</b></td></tr>
+      <tr style="border-bottom:1px solid #e2ece6"><td style="padding:10px 8px;color:#5a6b62">Model chính</td><td style="padding:10px 8px"><code>frm.vn.ward</code>, mở rộng <code>res.partner</code></td></tr>
+      <tr><td style="padding:10px 8px;color:#5a6b62">Dữ liệu</td><td style="padding:10px 8px">~3.321 phường/xã (cập nhật 2025)</td></tr>
+    </table>
+  </div>
+
+  <!-- ===== ABOUT ===== -->
+  <div style="border-top:2px solid #e2ece6;margin-top:32px;padding-top:24px;text-align:center">
+    <h3 style="font-size:18px;color:#146b3a;margin:0 0 6px">Phát triển bởi BSD</h3>
+    <p style="margin:0;font-size:15px;color:#5a6b62">
+      Giải pháp Odoo cho doanh nghiệp Việt Nam — nông nghiệp, bất động sản, khu công nghiệp, ERP ngành.
+      <br><a href="https://bsdinsight.com" style="color:#146b3a;font-weight:700;text-decoration:none">bsdinsight.com</a>
+    </p>
+  </div>
+
+</section>
